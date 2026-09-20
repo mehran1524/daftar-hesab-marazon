@@ -1,0 +1,370 @@
+/* ===================================================
+   دفتر حساب مجموعه بوتیا - Style.css (اصلاح شده کامل)
+   =================================================== */
+
+:root{
+    --primary-color:#00695c;
+    --primary-dark:#004d40;
+    --primary-light:#008577;
+    --secondary-color:#f5f5f5;
+    --danger-color:#d32f2f;
+    --success-color:#388e3c;
+    --text-color:#333;
+    --border-color:#b2d8d0;
+    --orange-report:#008577;
+}
+
+*{
+    box-sizing:border-box;
+}
+
+html,
+body{
+    width:100%;
+    max-width:100%;
+    overflow-x:hidden;
+}
+
+body{
+    margin:0;
+    padding:0;
+    font-family:'Tahoma', sans-serif;
+    background:#edf5f2;
+    color:var(--text-color);
+    direction:rtl;
+}
+
+/* ===================== هدر ===================== */
+
+.app-header{
+    background:var(--primary-color);
+    color:#fff;
+    padding:20px 0 0 0;
+    text-align:center;
+    box-shadow:0 2px 5px rgba(0,0,0,0.2);
+    position:relative;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    min-height:130px;
+}
+
+.app-header h1{
+    margin:0;
+    font-size:1.3rem;
+}
+
+.app-header h3{
+    margin:4px 0 0 0;
+    font-size:0.9rem;
+    opacity:0.9;
+    font-weight:normal;
+}
+
+.datetime-container{
+    display:flex;
+    flex-direction:row-reverse;
+    justify-content:center;
+    align-items:center;
+    gap:10px;
+    direction:rtl;
+    margin-top:8px;
+    font-family:'Tahoma', sans-serif;
+    font-size:1rem;
+    background:rgba(0,0,0,0.15);
+    padding:4px 12px;
+    border-radius:20px;
+    width:fit-content;
+    margin-bottom:12px;
+}
+
+/* ===================== کانتینر اصلی ===================== */
+
+.container{
+    max-width:600px;
+    margin:0 auto;
+    padding:16px;
+}
+
+/* ===================== کارت‌ها ===================== */
+
+.card{
+    background:#fff;
+    border-radius:12px;
+    box-shadow:0 2px 8px rgba(0,0,0,0.08);
+    padding:16px;
+    margin-bottom:16px;
+}
+
+.card h2,
+.card h3{
+    margin:0 0 14px 0;
+    font-size:1.05rem;
+    color:var(--primary-color);
+    border-right:4px solid var(--primary-color);
+    padding-right:10px;
+}
+
+/* ===================== فرم‌ها ===================== */
+
+form{
+    display:flex;
+    flex-direction:column;
+}
+
+.form-row{
+    display:flex;
+    flex-wrap:wrap;
+    flex-direction:row;
+    gap:12px;
+    width:100%;
+}
+
+.form-group{
+    display:flex;
+    flex-direction:column;
+    flex:1 1 calc(50% - 6px);
+    min-width:140px;
+    margin-bottom:14px;
+}
+
+.form-group label{
+    display:block;
+    margin-bottom:6px;
+    font-size:0.9rem;
+    font-weight:bold;
+    color:var(--primary-color);
+}
+
+/* ===================== اصلاح بخش اقلام ===================== */
+
+#itemsContainer .item-row{
+    margin-bottom:8px !important;
+}
+
+#itemsContainer .form-row{
+    gap:8px !important;
+}
+
+#itemsContainer .form-group{
+    margin-bottom:0 !important;
+}
+
+.row-amount-words{
+    font-size:0.75rem;
+    color:var(--primary-light);
+    min-height:16px;
+    margin-top:4px;
+}
+
+/* ===================== Input / Select ===================== */
+
+input[type="text"],
+input[type="number"],
+select{
+    width:100%;
+    padding:11px 12px;
+    border:1px solid var(--border-color);
+    border-radius:10px;
+    font-family:inherit;
+    font-size:0.95rem;
+    background:#fff;
+    color:var(--text-color);
+    outline:none;
+    box-sizing:border-box;
+}
+
+input:focus,
+select:focus{
+    border-color:var(--primary-color);
+    box-shadow:0 0 0 3px rgba(0,105,92,0.12);
+}
+
+select{
+    appearance:none;
+    -webkit-appearance:none;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='%2300695c'><path d='M7 10l5 5 5-5z'/></svg>");
+    background-repeat:no-repeat;
+    background-position:left 12px center;
+    padding-left:32px;
+}
+
+/* ===================== دکمه ثبت ===================== */
+
+.btn-submit{
+    width:100%;
+    margin-top:8px;
+    padding:13px;
+    border:none;
+    border-radius:8px;
+    background:var(--primary-color) !important;
+    color:#ffffff !important;
+    font-weight:bold;
+    font-size:1rem;
+    cursor:pointer;
+    font-family:inherit;
+}
+
+/* ===================== مبلغ پرداختی/دریافتی ===================== */
+
+#paidAmountLabel,
+.payment-row label{
+    font-size:1rem;
+}
+
+#paidAmount,
+#paidAmountWords{
+    font-size:1.05rem;
+    padding:13px 12px;
+}
+
+/* ===================== تراکنش‌ها ===================== */
+
+.transaction-info{
+    width:100%;
+    min-width:0;
+}
+
+.transaction-paid-row{
+    display:flex;
+    flex-direction:column;
+    align-items:stretch;
+    gap:8px;
+    margin-top:8px;
+    padding-top:8px;
+    border-top:1px dashed rgba(0,105,92,0.2);
+    width:100%;
+}
+
+.transaction-paid{
+    direction:rtl;
+    width:100%;
+    min-width:0;
+    text-align:right;
+    margin-top:0 !important;
+    border-top:none !important;
+    padding-top:0 !important;
+    font-weight:bold;
+    line-height:1.9;
+    word-break:break-word;
+    overflow-wrap:anywhere;
+}
+
+.transaction-paid .transaction-amount-positive,
+.transaction-paid .transaction-amount-negative{
+    display:inline;
+    word-break:break-word;
+    overflow-wrap:anywhere;
+}
+
+.transaction-delete-btn{
+    border:none;
+    background:#d32f2f;
+    color:#fff;
+    border-radius:10px;
+    padding:10px 16px;
+    font-size:0.95rem;
+    font-weight:bold;
+    cursor:pointer;
+    white-space:nowrap;
+    width:auto;
+    min-width:72px;
+    max-width:max-content;
+    align-self:flex-start;
+    margin:0;
+    text-align:center;
+}
+
+.transaction-delete-btn:active{
+    transform:scale(0.97);
+}
+
+/* ===================== واکنش‌گرا (موبایل) ===================== */
+
+@media (max-width:480px){
+    .form-row:not(#itemsContainer .form-row){
+        flex-direction:column;
+    }
+
+    #itemsContainer .form-row{
+        flex-direction:row !important;
+        flex-wrap:nowrap !important;
+    }
+
+    #itemsContainer .form-group{
+        min-width:0 !important;
+    }
+
+    #itemsContainer input,
+    #itemsContainer select{
+        padding:10px 8px;
+        font-size:0.85rem;
+    }
+}
+
+@media (max-width:480px){
+    body{
+        font-size:1.1rem;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6{
+        font-size:1.15em !important;
+    }
+
+    label,
+    input,
+    select,
+    textarea,
+    button,
+    a,
+    span,
+    p,
+    li{
+        font-size:1.1rem !important;
+    }
+
+    .tab-item{
+        font-size:1rem !important;
+    }
+
+    #itemsContainer input,
+    #itemsContainer select{
+        font-size:1.1rem !important;
+        padding:10px 8px;
+    }
+}
+
+@media (max-width:480px){
+    .payment-row label,
+    #paidAmountLabel{
+        font-size:1rem !important;
+    }
+
+    #paidAmount,
+    #paidAmountWords{
+        font-size:1rem !important;
+        padding:13px 10px !important;
+    }
+
+    .transaction-paid-row{
+        gap:8px;
+        padding-top:6px;
+    }
+
+    .transaction-paid{
+        font-size:1rem !important;
+        line-height:1.9 !important;
+    }
+
+    .transaction-delete-btn{
+        font-size:0.9rem !important;
+        padding:8px 12px !important;
+        min-width:68px;
+        align-self:flex-start;
+    }
+}

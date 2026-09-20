@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>دفتر اشخاص | مارازون</title>
+    <meta name="theme-color" content="#00695c" />
+    <link rel="manifest" href="./manifest.json" />
+    <link rel="stylesheet" href="./style.css" />
+
+    <style>
+        html, body { width: 100%; max-width: 100%; overflow-x: hidden; margin: 0; padding: 0; background: #eef6f3; font-family: Tahoma, sans-serif; }
+
+        /* ===== هدر بوتیا ===== */
+        .app-header {
+            background: #00695c;
+            color: #ffffff;
+            padding: 20px 15px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .app-header h3 { font-size: 1.2rem; margin: 0; }
+        .back-btn {
+            position: absolute;
+            right: 10px;
+            top: 14px;
+            background: #ffffff;
+            color: #00695c;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            font-family: inherit;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+        }
+
+        /* ===== بدنه ===== */
+        .container { padding: 15px; max-width: 720px; margin: auto; }
+
+        .card {
+            background: #ffffff;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+        }
+        .card h2 {
+            margin: 0 0 12px;
+            font-size: 1rem;
+            color: #00695c;
+            border-right: 4px solid #00695c;
+            padding-right: 8px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 9px;
+            margin-top: 6px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            box-sizing: border-box;
+            font-family: inherit;
+            font-size: 0.9rem;
+        }
+        label { font-size: 0.75rem; color: #666; display: block; }
+        .form-group { margin-top: 8px; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+        /* ===== دکمه‌ها ===== */
+        .btn-primary {
+            background: #00695c;
+            color: #ffffff;
+            border: none;
+            padding: 12px;
+            margin-top: 14px;
+            width: 100%;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.95rem;
+            transition: background 0.2s;
+        }
+        .btn-primary:hover { background: #008577; }
+        .btn-cancel {
+            background: #9e9e9e;
+            color: #ffffff;
+            border: none;
+            padding: 12px;
+            margin-top: 8px;
+            width: 100%;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        /* ===== بخش حساب بانکی ===== */
+        .bank-section {
+            margin-top: 14px;
+            padding-top: 12px;
+            border-top: 1px dashed #b2dfd5;
+        }
+        .bank-title { font-weight: bold; color: #00695c; font-size: 0.9rem; display: block; margin-bottom: 6px; }
+        .card-number, .sheba-number {
+            text-align: left;
+            direction: ltr;
+            letter-spacing: 1px;
+        }
+
+        /* ===== لیست اشخاص ===== */
+        .party-item {
+            padding: 12px 10px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            transition: background 0.2s;
+        }
+        .party-item:last-child { border-bottom: none; }
+        .party-item:hover { background: #fafafa; }
+
+        .party-info { flex: 1; min-width: 0; }
+        .party-name-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+        .party-name { font-weight: bold; color: #333; font-size: 0.95rem; }
+        .party-mobile { display: block; color: #888; font-size: 0.75rem; margin-top: 3px; direction: ltr; text-align: right; }
+
+        .role-badge {
+            font-size: 0.65rem;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+        .role-customer { background: #e0f2ed; color: #00796b; }
+        .role-supplier { background: #e4f0ec; color: #00695c; }
+        .role-employee { background: #e0f2f1; color: #00796b; }
+
+        /* ===== دکمه‌های کپی (سنجاق) ===== */
+        .party-copy-btns {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+            margin-top: 6px;
+        }
+        .copy-btn {
+            background: #edf5f2;
+            color: #37474f;
+            border: none;
+            padding: 3px 9px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 0.7rem;
+            font-family: inherit;
+            transition: background 0.2s;
+        }
+        .copy-btn:hover { background: #cfd8dc; }
+
+        .party-balance-box { text-align: left; min-width: 110px; }
+        .balance { font-weight: bold; font-size: 0.95rem; direction: ltr; }
+        .balance-green { color: #2e7d32; }
+        .balance-red { color: #c62828; }
+        .balance-neutral { color: #757575; }
+        .text-positive { color: #2e7d32; }
+        .text-negative { color: #c62828; }
+        .text-neutral  { color: #757575; }
+        .status-text { font-size: 0.68rem; display: block; margin-top: 2px; }
+
+        .action-btns { margin-top: 6px; display: flex; justify-content: flex-end; gap: 4px; }
+        .edit-btn {
+            background: #008577;
+            color: #ffffff;
+            border: none;
+            padding: 4px 9px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.72rem;
+            font-family: inherit;
+        }
+        .delete-btn {
+            background: #c62828;
+            color: #ffffff;
+            border: none;
+            padding: 4px 9px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.72rem;
+            font-family: inherit;
+        }
+
+        @media (max-width: 480px) {
+            .form-row { grid-template-columns: 1fr 1fr; gap: 8px; }
+            .party-balance-box { min-width: 85px; }
+            .balance { font-size: 0.85rem; }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="appShell">
+        <header class="app-header">
+            <button class="back-btn" onclick="goBack()">بازگشت</button>
+            <h3>دفتر اشخاص مجموعه مارازون</h3>
+        </header>
+
+        <main class="container">
+            <!-- ===== فرم ثبت / ویرایش ===== -->
+            <section class="card">
+                <h2 id="formTitle">ثبت شخص جدید</h2>
+                <input type="hidden" id="editId" />
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="partyRole">نقش</label>
+                        <select id="partyRole">
+                            <option value="customer">مشتری</option>
+                            <option value="supplier">تأمین‌کننده</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="partyName">نام و نام خانوادگی</label>
+                        <input type="text" id="partyName" placeholder="نام شخص" autocomplete="off" />
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="partyPhone">موبایل</label>
+                        <input type="tel" id="partyPhone" placeholder="۰۹۱۲۳۴۵۶۷۸۹" maxlength="11" inputmode="numeric" />
+                    </div>
+                    <div class="form-group">
+                        <label for="partyAddress">آدرس</label>
+                        <input type="text" id="partyAddress" placeholder="آدرس شخص" autocomplete="off" />
+                    </div>
+                </div>
+
+                <div class="bank-section">
+                    <span class="bank-title">حساب بانکی</span>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="partyIban">شماره شبا</label>
+                            <input class="sheba-number" id="partyIban" type="text" placeholder="1234-5678-9012-3456-7890-12" maxlength="29" inputmode="numeric" oninput="handleGroupedInput(this, 4, 24)" />
+                        </div>
+                        <div class="form-group">
+                            <label for="partyCardNumber">شماره کارت</label>
+                            <input class="card-number" id="partyCardNumber" type="text" placeholder="1234-5678-9012-3456" maxlength="19" inputmode="numeric" oninput="handleGroupedInput(this, 4, 16)" />
+                        </div>
+                    </div>
+                </div>
+
+                <button id="submitBtn" class="btn-primary" onclick="savePartyHandler()">ثبت شخص</button>
+                <button id="cancelBtn" class="btn-cancel" style="display: none;" onclick="cancelEdit()">انصراف از ویرایش</button>
+            </section>
+
+            <!-- ===== جستجو ===== -->
+            <section class="card">
+                <input type="text" id="searchInput" placeholder="جستجوی اشخاص (نام یا موبایل)..." oninput="loadParties()" />
+            </section>
+
+            <!-- ===== لیست اشخاص ===== -->
+            <section class="card">
+                <h2>لیست اشخاص</h2>
+                <div id="partiesList"></div>
+            </section>
+        </main>
+    </div>
+
+    <script src="./db.js"></script>
+    <script src="./finance.js"></script>
+    <script>
+        /* ---------- ابزار ارقام فارسی/انگلیسی ---------- */
+        function toPersianDigits(str) {
+            return String(str).replace(/\d/g, d => "۰۱۲۳۴۵۶۷۸۹"[d]);
+        }
+        function toEnglishDigits(str) {
+            return String(str).replace(/[۰-۹]/g, d => "۰۱۲۳۴۵۶۷۸۹".indexOf(d));
+        }
+
+        function formatGroupedDigits(value, groupSize = 4, maxDigits = 24) {
+            const digits = toEnglishDigits(value).replace(/\D/g, "").slice(0, maxDigits);
+            const groups = [];
+            for (let i = 0; i < digits.length; i += groupSize) {
+                groups.push(digits.slice(i, i + groupSize));
+            }
+            return groups.join("-");
+        }
+        function handleGroupedInput(input, groupSize = 4, maxDigits = 24) {
+            input.value = formatGroupedDigits(input.value, groupSize, maxDigits);
+        }
+
+        function escapeHtml(str) {
+            return String(str || "").replace(/[&<>"']/g, c => ({
+                "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+            }[c]));
+        }
+
+        function formatNumber(n) {
+            const num = Number(n || 0);
+            const sign = num < 0 ? "-" : "";
+            const abs = Math.abs(num);
+            const grouped = abs.toLocaleString("en-US");
+            return toPersianDigits(sign + grouped).replace(/,/g, "٬");
+        }
+
+        /* ---------- نمایش مانده (از دید طرف حساب) ---------- */
+        function getBalancePresentation(balance) {
+            const value = Number(balance) || 0;
+
+            if (value < 0) {
+                return { sign: "−", amount: Math.abs(value), className: "text-negative", color: "#c62828", label: "بدهکار" };
+            }
+            if (value > 0) {
+                return { sign: "+", amount: value, className: "text-positive", color: "#2e7d32", label: "بستانکار" };
+            }
+            return { sign: "", amount: 0, className: "text-neutral", color: "#757575", label: "تسویه" };
+        }
+
+        /* ---------- متادیتای نقش‌ها ---------- */
+        const ROLE_META = {
+            customer: { label: "مشتری", css: "role-customer" },
+            supplier: { label: "تأمین‌کننده", css: "role-supplier" },
+            employee: { label: "کارمند", css: "role-employee" }
+        };
+
+        /* ---------- ناوبری و وضعیت فرم ---------- */
+        function goBack() { window.location.href = "index.html"; }
+
+        function resetForm() {
+            document.getElementById("editId").value = "";
+            document.getElementById("partyName").value = "";
+            document.getElementById("partyPhone").value = "";
+            document.getElementById("partyAddress").value = "";
+            document.getElementById("partyIban").value = "";
+            document.getElementById("partyCardNumber").value = "";
+            document.getElementById("partyRole").value = "customer";
+            document.getElementById("submitBtn").innerText = "ثبت شخص";
+            document.getElementById("cancelBtn").style.display = "none";
+            document.getElementById("formTitle").innerText = "ثبت شخص جدید";
+        }
+
+        function cancelEdit() { resetForm(); }
+
+        function startEdit(party) {
+            document.getElementById("editId").value = party.id || "";
+            document.getElementById("partyName").value = party.full_name || party.name || "";
+            document.getElementById("partyRole").value = (Array.isArray(party.roles) && party.roles[0]) || party.role || "customer";
+            document.getElementById("partyPhone").value = party.mobile ? toPersianDigits(party.mobile) : "";
+            document.getElementById("partyAddress").value = party.address || "";
+            document.getElementById("partyIban").value = party.iban ? formatGroupedDigits(party.iban, 4, 24) : "";
+            document.getElementById("partyCardNumber").value = party.card_number ? formatGroupedDigits(party.card_number, 4, 16) : "";
+            document.getElementById("submitBtn").innerText = "ذخیره تغییرات";
+            document.getElementById("cancelBtn").style.display = "block";
+            document.getElementById("formTitle").innerText = "ویرایش شخص";
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+
+        /* ---------- ذخیره ---------- */
+        async function savePartyHandler() {
+            try {
+                const full_name = document.getElementById("partyName").value.trim();
+                const role = document.getElementById("partyRole").value;
+                const phone = toEnglishDigits(document.getElementById("partyPhone").value).replace(/\D/g, "").slice(0, 11);
+                const address = document.getElementById("partyAddress").value.trim();
+                const iban = toEnglishDigits(document.getElementById("partyIban").value).replace(/\D/g, "").slice(0, 24);
+                const card_number = toEnglishDigits(document.getElementById("partyCardNumber").value).replace(/\D/g, "").slice(0, 16);
+
+                if (!full_name) { alert("نام شخص الزامی است"); return; }
+                if (!role) { alert("نقش شخص الزامی است"); return; }
+
+                const editId = document.getElementById("editId").value;
+
+                const partyData = {
+                    full_name,
+                    roles: [role],
+                    mobile: phone,
+                    address,
+                    iban,
+                    card_number
+                };
+                if (editId) partyData.id = editId;
+
+                console.log("📦 دادهٔ ارسالی به saveParty:", partyData);
+
+                const saved = await boutiaDB.saveParty(partyData);
+                console.log("✅ نتیجهٔ ذخیره:", saved);
+
+                if (!saved) {
+                    alert("ذخیره ناموفق بود (خروجی null)");
+                    return;
+                }
+
+                resetForm();
+                await loadParties();
+            } catch (err) {
+                console.error("❌ خطا در ذخیره شخص:", err);
+                alert("خطا در ذخیره شخص: " + (err && err.message ? err.message : err));
+            }
+        }
+
+        /* ---------- بارگذاری لیست ---------- */
+        async function loadParties() {
+            const listEl = document.getElementById("partiesList");
+            try {
+                const searchValue = toEnglishDigits(document.getElementById("searchInput").value.trim().toLowerCase());
+                listEl.innerHTML = "";
+
+                const parties = await financeCalc.getPartiesWithBalances();
+
+                for (const party of parties) {
+                    const name = party.full_name || party.name || "";
+                    const mobile = String(party.mobile || "");
+
+                    if (searchValue && !name.toLowerCase().includes(searchValue) && !mobile.includes(searchValue)) continue;
+
+                    const roles = Array.isArray(party.roles) ? party.roles : (party.roles ? [party.roles] : []);
+                    const isEmployee = roles.includes("employee");
+                    const balance = party.balance || {};
+
+                    const roleMeta = ROLE_META[roles[0]] || ROLE_META.customer;
+
+                    let balanceBoxHtml = "";
+
+                    if (isEmployee) {
+                        const salaryPaid = Number(balance.salaryPaid) || 0;
+                        balanceBoxHtml = `
+                            <div class="balance text-neutral">${formatNumber(salaryPaid)}</div>
+                            <span class="status-text">مجموع حقوق پرداختی</span>
+                        `;
+                    } else {
+                        const p = getBalancePresentation(balance.balance);
+                        const amountText = p.amount === 0 ? "۰" : (p.sign + formatNumber(p.amount));
+
+                        balanceBoxHtml = `
+                            <div class="balance ${p.className}">${amountText}</div>
+                            <span class="status-text" style="color: ${p.color};">${p.label}</span>
+                        `;
+                    }
+
+                    const copyBtnsHtml = `
+                        <div class="party-copy-btns">
+                            ${party.iban ? `<button class="copy-btn" onclick="copyPartyField(this, 'iban')">📌 شبا</button>` : ""}
+                            ${party.card_number ? `<button class="copy-btn" onclick="copyPartyField(this, 'card_number')">📌 کارت</button>` : ""}
+                            ${party.address ? `<button class="copy-btn" onclick="copyPartyField(this, 'address')">📌 آدرس</button>` : ""}
+                        </div>
+                    `;
+
+                    const div = document.createElement("div");
+                    div.className = "party-item";
+                    div.innerHTML = `
+                        <div class="party-info">
+                            <div class="party-name-row">
+                                <span class="party-name">${escapeHtml(name)}</span>
+                                <span class="role-badge ${roleMeta.css}">${roleMeta.label}</span>
+                            </div>
+                            ${mobile ? `<small class="party-mobile">${toPersianDigits(mobile)}</small>` : ""}
+                            ${copyBtnsHtml}
+                        </div>
+                        <div class="party-balance-box">
+                            ${balanceBoxHtml}
+                            <div class="action-btns">
+                                <button class="edit-btn" onclick="startEditFromList(this)">ویرایش</button>
+                                <button class="delete-btn" onclick="removePartyHandler(this)">حذف</button>
+                            </div>
+                        </div>
+                    `;
+                    div.dataset.partyJson = JSON.stringify(party);
+                    listEl.appendChild(div);
+                }
+
+                if (listEl.children.length === 0) {
+                    listEl.innerHTML = '<div style="text-align: center; padding: 20px; color: #999;">هیچ شخصی یافت نشد.</div>';
+                }
+            } catch (err) {
+                console.error("❌ خطا در بارگذاری لیست:", err);
+                listEl.innerHTML = '<div style="text-align: center; padding: 20px; color: #c62828;">خطا در بارگذاری لیست اشخاص.</div>';
+            }
+        }
+
+        function startEditFromList(btn) {
+            try {
+                const party = JSON.parse(btn.closest(".party-item").dataset.partyJson);
+                startEdit(party);
+            } catch (err) {
+                console.error("❌ خطا در ویرایش شخص:", err);
+            }
+        }
+
+        async function removePartyHandler(btn) {
+            try {
+                const party = JSON.parse(btn.closest(".party-item").dataset.partyJson);
+                if (!confirm(`آیا از حذف «${party.full_name || party.name}» مطمئن هستید؟`)) return;
+                await boutiaDB.deleteParty(party.id);
+                await loadParties();
+            } catch (err) {
+                console.error("❌ خطا در حذف شخص:", err);
+                alert("خطا در حذف شخص: " + (err && err.message ? err.message : err));
+            }
+        }
+
+        /* ---------- کپی در کلیپ‌بورد ---------- */
+        async function copyTextToClipboard(text) {
+            try {
+                if (navigator.clipboard && window.isSecureContext) {
+                    await navigator.clipboard.writeText(text);
+                    return true;
+                }
+            } catch (e) {
+                /* fallback به روش قدیمی */
+            }
+            try {
+                const ta = document.createElement("textarea");
+                ta.value = text;
+                ta.style.position = "fixed";
+                ta.style.opacity = "0";
+                document.body.appendChild(ta);
+                ta.focus();
+                ta.select();
+                const ok = document.execCommand("copy");
+                document.body.removeChild(ta);
+                return ok;
+            } catch (e) {
+                return false;
+            }
+        }
+
+        async function copyPartyField(btn, field) {
+            try {
+                const party = JSON.parse(btn.closest(".party-item").dataset.partyJson);
+                const map = {
+                    iban: party.iban || "",
+                    card_number: party.card_number || "",
+                    address: party.address || ""
+                };
+                const value = map[field] || "";
+
+                if (!value) {
+                    alert("مقداری برای کپی وجود ندارد");
+                    return;
+                }
+
+                const ok = await copyTextToClipboard(value);
+                if (ok) {
+                    const original = btn.innerHTML;
+                    btn.innerHTML = "✅ کپی شد";
+                    setTimeout(() => { btn.innerHTML = original; }, 1200);
+                } else {
+                    alert("کپی ناموفق بود");
+                }
+            } catch (err) {
+                console.error("❌ خطا در کپی:", err);
+            }
+        }
+
+        /* ---------- ورودی موبایل ---------- */
+        document.getElementById("partyPhone").addEventListener("input", function (e) {
+            const englishValue = toEnglishDigits(e.target.value).replace(/\D/g, "").slice(0, 11);
+            e.target.value = toPersianDigits(englishValue);
+        });
+
+        /* ---------- راه‌اندازی ---------- */
+        window.addEventListener("load", async () => {
+            try {
+                await boutiaDB.init();
+                await loadParties();
+            } catch (err) {
+                console.error("❌ خطا در راه‌اندازی صفحه:", err);
+                alert("خطا در اتصال به دیتابیس: " + (err && err.message ? err.message : err));
+            }
+        });
+    </script>
+<script src="./pwa.js"></script>
+</body>
+</html>

@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>دفتر حساب مارازون</title>
+    <meta name="theme-color" content="#00695c" />
+    <link rel="manifest" href="./manifest.json" />
+    <link rel="stylesheet" href="./style.css" />
+
+    <style>
+        html, body { width: 100%; max-width: 100%; overflow-x: hidden; margin: 0; padding: 0; }
+        .app-header { background: #00695c; color: #ffffff; padding: 20px 0 0; text-align: center; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); position: relative; display: flex; flex-direction: column; align-items: center; min-height: 130px; }
+        .datetime-container { display: flex; flex-direction: row-reverse; justify-content: center; align-items: center; gap: 10px; margin-top: 8px; margin-bottom: 50px; padding: 4px 12px; border-radius: 20px; background: rgba(0, 0, 0, 0.15); font-family: Tahoma, sans-serif; font-size: 1rem; }
+        .header-tabs { display: flex; position: absolute; right: 0; bottom: 0; height: 40px; gap: 1px; }
+        .tab-item { flex: 1; min-width: 80px; display: flex; align-items: center; justify-content: center; padding: 0 6px; border: none; color: #ffffff; font-size: 0.8rem; font-weight: bold; text-decoration: none; cursor: pointer; }
+        .tab-parties { background: #87ceeb; color: #123b50; } .tab-reports { background: #008577; font-size: 0.75rem; }
+
+
+
+        #itemsContainer { display: flex; flex-direction: column; gap: 0px !important; }
+        #itemsContainer .item-row { position: relative; margin-bottom: 2px !important; padding: 0 !important; }
+        #itemsContainer .form-row { gap: 6px !important; margin-bottom: 0px !important; flex-wrap: nowrap !important; }
+        #itemsContainer .form-group { margin-bottom: 0px !important; flex: 1; min-width: 0; }
+        #itemsContainer .form-group label { margin-bottom: 4px; font-size: 0.75rem; white-space: nowrap; overflow: hidden; }
+        
+        /* حالت خرید (دو ستونه) */
+        #itemsContainer .form-row.two-columns .form-group:nth-child(1) { flex: 2; } 
+        #itemsContainer .form-row.two-columns .form-group:nth-child(2) { display: none; } /* مخفی سازی تعداد */
+        #itemsContainer .form-row.two-columns .form-group:nth-child(3) { flex: 2; }
+        #itemsContainer .form-row.two-columns .col-total-wrapper { display: none; }
+
+        /* حالت فروش (چهار ستونه) */
+        #itemsContainer .form-row.four-columns .form-group:nth-child(1) { flex: 1.8; } 
+        #itemsContainer .form-row.four-columns .form-group:nth-child(2) { flex: 1; display: block; }
+        #itemsContainer .form-row.four-columns .form-group:nth-child(3) { flex: 1.5; }
+        #itemsContainer .form-row.four-columns .col-total-wrapper { display: block; flex: 1.8; }
+
+        #calcSection { border-bottom: 2px dashed #b2dfd5; padding-bottom: 10px; margin-bottom: 15px; }
+
+        .total-summary-row { background: #e0f2ed; padding: 10px; border-radius: 8px; margin-top: 10px; border: 1px solid #b2dfd5; }
+        .total-summary-row .total-amount-box { display: flex; justify-content: space-between; align-items: center; font-weight: bold; color: #00695c; font-size: 0.95rem; }
+        .total-summary-row .total-words { font-size: 0.8rem; color: #008577; margin-top: 5px; text-align: left; border-top: 1px solid rgba(0,105,92, 0.1); padding-top: 5px; }
+
+        .add-row-container { display: flex; justify-content: flex-start; margin-top: 5px; padding-right: 5px; }
+        .add-row-button { width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; border: none; border-radius: 50%; background: #00695c; color: #ffffff; font-size: 1.5rem; font-weight: bold; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.2); transition: transform 0.1s; }
+        .add-row-button:active { transform: scale(0.9); }
+
+        .row-amount-words { min-height: 14px; height: 14px; margin-top: 2px; color: #00695c; font-size: 0.65rem; line-height: 14px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+        
+        .payment-row { display: flex; gap: 10px; margin-bottom: 16px; margin-top: 10px; }
+        .payment-row .form-group { flex: 1; min-width: 0; }
+        #paidAmountWords { background: #f2faf7; color: #00695c; }
+        .btn-submit { width: 100%; margin-top: 8px; padding: 13px; border: none; border-radius: 8px; background: #00695c !important; color: #ffffff !important; font-weight: bold; cursor: pointer; }
+        
+        .hidden { display: none !important; }
+
+        .transactions-section { margin-top: 20px; padding: 15px; background: #fff; border-top: 4px solid #00695c; }
+        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 8px; }
+        .refresh-btn { background: none; border: none; font-size: 1.2rem; cursor: pointer; filter: grayscale(1); transition: 0.3s; }
+        .refresh-btn:active { transform: rotate(180deg); }
+
+        .transaction-card { background: #ffffff; border-radius: 10px; padding: 12px; margin-bottom: 12px; border-right: 5px solid #ccc; box-shadow: 0 2px 8px rgba(0,0,0,0.08); border: 1px solid #eee; border-right-width: 5px; }
+        .transaction-card-positive { border-right-color: #2e7d32; background: #f1f8e9; }
+        .transaction-card-negative { border-right-color: #c62828; background: #ffebee; }
+
+        .transaction-main-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+        .transaction-info { flex: 1; min-width: 0; }
+
+        .transaction-title-row { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+        .transaction-party { font-weight: bold; font-size: 0.95rem; color: #333; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .transaction-type { font-size: 0.65rem; background: rgba(0,0,0,0.05); padding: 2px 6px; border-radius: 4px; color: #666; }
+
+        .transaction-meta { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 6px; font-size: 0.7rem; color: #666; }
+        .transaction-meta-item { display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
+
+        .transaction-items { font-size: 0.75rem; color: #555; background: rgba(255,255,255,0.6); padding: 6px; border-radius: 6px; margin-top: 5px; }
+        .transaction-item-line { display: flex; justify-content: space-between; border-bottom: 1px dotted #ddd; padding: 2px 0; }
+
+        .transaction-amount-box { text-align: left; min-width: 110px; }
+        .transaction-amount-label { font-size: 0.7rem; color: #666; margin-bottom: 2px; }
+        .transaction-amount { display: block; font-weight: bold; font-size: 1rem; direction: ltr; color: #111; }
+        .transaction-amount-positive { color: #2e7d32; }
+        .transaction-amount-negative { color: #c62828; }
+        .transaction-currency { font-size: 0.65rem; color: #777; }
+
+        .transaction-description { font-size: 0.7rem; color: #7f8c8d; margin-top: 6px; font-style: italic; }
+        .transaction-paid { font-size: 0.75rem; color: #00695c; font-weight: bold; margin-top: 6px; border-top: 1px dashed rgba(0,105,92,0.2); padding-top: 4px; }
+
+        .transaction-meta-icon { font-size: 0.85rem; line-height: 1; }
+
+        @media (max-width: 480px) {
+            html {
+        font-size: 18px; /* قبلاً معمولاً 16px بوده */
+    }
+
+      label, input, select, textarea {
+        font-size: 2rem !important; /* حدود 2 سایز بزرگ‌تر */
+    }
+            #transactionForm > .form-row { display: flex !important; flex-direction: row !important; flex-wrap: nowrap !important; gap: 10px !important; }
+            #transactionForm > .form-row > .form-group { flex: 1 1 0 !important; min-width: 0 !important; }
+            #itemsContainer .form-row { flex-direction: row !important; }
+            #itemsContainer input, #itemsContainer select { font-size: 0.8rem; padding: 8px 4px; }
+            #itemsContainer .form-group label { font-size: 0.65rem; }
+            .payment-row { display: flex !important; flex-direction: row !important; flex-wrap: nowrap !important; gap: 10px !important; }
+            .tab-item { font-size: 0.65rem !important; min-width: 65px !important; padding: 0 4px !important; }
+            label { font-size: 0.7rem !important; }
+            input, select { font-size: 0.85rem !important; }
+        }
+    </style>
+</head>
+<body>
+    <div id="appShell">
+        <header class="app-header">
+            <h1>بنام خداوند روزی رسان</h1>
+            <h3>دفتر حساب مارازون</h3>
+            <div class="datetime-container">
+                <span id="liveClock">۰۰:۰۰:۰۰</span><span style="opacity: 0.5;">|</span><span id="todayDate">در حال دریافت...</span>
+            </div>
+            <div class="header-tabs">
+                <a href="./parties.html" class="tab-item tab-parties">دفتر اشخاص</a>
+                <a href="./report.html" class="tab-item tab-reports">گزارش دوره‌ای</a>
+            </div>
+        </header>
+
+        <main class="container">
+            <section class="card">
+                <h2>ثبت تراکنش جدید</h2>
+
+                <div id="databaseStatus" class="transactions-error" role="alert" hidden>
+                    <span id="databaseError"></span>
+                    <button id="retryDatabase" type="button">تلاش دوباره</button>
+                </div>
+                <form id="transactionForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="type">نوع تراکنش</label>
+                            <select id="type" required onchange="onTransactionTypeChange()">
+                                <option value="buy">خرید</option>
+                                <option value="sell">فروش</option>
+                                <option value="receive">دریافت وجه (طلب)</option>
+                                <option value="payment">پرداخت وجه (بدهی)</option>
+                                <option value="expense">ثبت هزینه</option>
+                            </select>
+                        </div>
+                        <div class="form-group" id="partyGroup">
+                            <label id="partyLabel" for="partySelect">نام تأمین‌کننده</label>
+                            <input type="text" id="partySelect" list="partyList" placeholder="تأمین‌کننده محترم" autocomplete="off" />
+                            <datalist id="partyList"></datalist>
+                        </div>
+                    </div>
+
+                    <div id="calcSection">
+                        <div id="itemsContainer">
+                            <div class="item-row">
+                                <div class="form-row two-columns" id="rowLayout">
+                                    <div class="form-group">
+                                        <label class="item-type-label">جنس خریداری‌شده</label>
+                                        <input type="text" class="product-category" list="productsList" placeholder="انتخاب یا تایپ جنس" value="پارچه" autocomplete="off" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="qty-label">تعداد</label>
+                                        <input type="text" class="row-qty" inputmode="decimal" placeholder="تعداد" oninput="calculateRowTotal(this)" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="amount-label">مبلغ (تومان)</label>
+                                        <input type="text" class="row-amount" inputmode="numeric" placeholder="مثلاً ۵۰۰,۰۰۰" oninput="handleRowAmount(this)" />
+                                        <div class="row-amount-words"></div>
+                                    </div>
+                                    <div class="form-group col-total-wrapper">
+                                        <label>مجموع (تومان)</label>
+                                        <input type="text" class="row-total" placeholder="۰" readonly tabindex="-1" />
+                                        <div class="row-total-words" style="min-height: 14px; height: 14px; margin-top: 2px; color: #008577; font-size: 0.65rem;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="add-row-container">
+                            <button type="button" class="add-row-button" onclick="addNewRow()">+</button>
+                        </div>
+
+                        <div class="total-summary-row">
+                            <div class="total-amount-box">
+                                <span>جمع کل فاکتور:</span>
+                                <span id="grandTotalLabel">۰ تومان</span>
+                            </div>
+                            <div id="grandTotalWords" class="total-words">صفر تومان</div>
+                        </div>
+                    </div>
+
+                    <div class="payment-row">
+                        <div class="form-group">
+                            <label id="paidAmountLabel" for="paidAmount">مبلغ پرداختی (تومان)</label>
+                            <input type="text" id="paidAmount" inputmode="numeric" placeholder="مثلاً ۵۰۰,۰۰۰" />
+                        </div>
+                        <div class="form-group">
+                            <label for="paidAmountWords">مبلغ به حروف</label>
+                            <input type="text" id="paidAmountWords" placeholder="مبلغ به حروف" readonly tabindex="-1" />
+                        </div>
+                    </div>
+
+                    <div class="form-group" id="descriptionGroup">
+                        <label for="description">شرح تراکنش</label>
+                        <input type="text" id="description" placeholder="مثلاً خرید پارچه برای سفارش جدید" />
+                    </div>
+                    <button type="submit" class="btn-submit">ثبت در دفتر حساب بوتیا</button>
+                </form>
+            </section>
+
+            <section class="card transactions-section">
+                <div class="section-header">
+                    <h2>آخرین تراکنش‌ها</h2>
+                    <button type="button" onclick="loadTransactions()" class="refresh-btn" title="بروزرسانی لیست">🔄</button>
+                </div>
+                <div id="transactionsList">
+                    <div style="text-align: center; padding: 20px; color: #999;">در حال بارگذاری لیست...</div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <datalist id="productsList">
+        <option value="پارچه"></option>
+        <option value="وسایل طراحی و دوخت"></option>
+        <option value="متفرقه"></option>
+    </datalist>
+
+    <script src="./clock.js"></script>
+    <script src="./db.js"></script>
+    <script src="./finance.js"></script>
+    <script type="module" src="./app.js"></script>
+    
+    <datalist id="expensesList">
+        <option value="اجاره کارگاه"></option>
+        <option value="قبض آب"></option>
+        <option value="قبض برق"></option>
+        <option value="قبض گاز"></option>
+        <option value="هزینه حمل و نقل"></option>
+        <option value="متفرقه"></option>
+    </datalist>
+<script src="./pwa.js"></script>
+</body>
+</html>
