@@ -1,4 +1,4 @@
-const CACHE_NAME = 'boutia-classic-personal-v6';
+const CACHE_NAME = 'marazon-classic-personal-v6';
 const ASSETS = [
   './', './index.html', './parties.html', './report.html', './style.css',
   './app.js', './db.js', './finance.js', './utils.js', './dates.js', './report.js', './pwa.js', './clock.js',

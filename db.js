@@ -1,5 +1,5 @@
 /**
- * Boutia Accounting Database Module
+ * Marazon Accounting Database Module
  * Developed for: Mehran
  * Structure: IndexedDB (Offline-first)
  * Version: 5 (اتصال سازگار و حفظ داده‌های نسخه‌های قبلی)
@@ -8,7 +8,7 @@
  *    تمام محاسبات مالی به finance.js منتقل شده است.
  */
 
-const DB_NAME = "BoutiaDB";
+const DB_NAME = "MarazonDB";
 const DB_VERSION = 5;
 const DB_STORES = {
     parties: ["type", "full_name", "normalized_name", "mobile", "card_number", "iban", "roles"],
@@ -221,7 +221,7 @@ const dbContext = {
         return this.save("parties", partyData);
     },
 
-    // ✅ جدید: ذخیره یا ویرایش کامل شخص (برای صفحه مدیریت اشخاص)
+    // ذخیره یا ویرایش کامل شخص (برای صفحه مدیریت اشخاص)
     async saveParty(data) {
         const full_name = this.normalizeText(data.full_name);
         if (!full_name) return null;
@@ -256,12 +256,12 @@ const dbContext = {
         return this.save("parties", partyData);
     },
 
-    // ✅ جدید: حذف شخص
+    // حذف شخص
     async deleteParty(partyId) {
         return this.delete("parties", partyId);
     },
 
-    // ✅ جدید: پر کردن party_id تراکنش های قدیمی (backfill)
+    // پر کردن party_id تراکنش های قدیمی (backfill)
     async backfillTransactionPartyIds() {
         const parties = await this.getAll("parties");
         const transactions = await this.getAll("transactions");
@@ -317,5 +317,6 @@ const dbContext = {
     }
 };
 
-// اکسپورت برای استفاده در app.js و صفحات دیگر
-window.boutiaDB = dbContext;
+// اکسپورت برای استفاده در app.js و صفحات دیگر (هم نام جدید و هم سازگاری با قبل)
+window.marazonDB = dbContext;
+window.marazonDB = dbContext;

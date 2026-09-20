@@ -335,7 +335,7 @@
             }
 
             .summary-box:nth-child(3) {
-                grid-column: 1 / -1; /* تراز مالی تمام عرض */
+                grid-column: 1 / -1;
             }
 
             .partners-grid {
@@ -343,13 +343,10 @@
             }
         }
 
-        /* موبایل دقیقاً طبق نیاز شما */
+        /* موبایل */
         @media (max-width: 600px) {
             .report-header h1 { font-size: 20px; }
 
-            /* ردیف 1: از تاریخ | تا تاریخ
-               ردیف 2: نوع تراکنش تمام عرض
-               ردیف 3: دکمه تمام عرض */
             .filters-grid {
                 grid-template-columns: repeat(2, minmax(120px, 1fr));
             }
@@ -359,9 +356,6 @@
                 grid-column: 1 / -1;
             }
 
-            /* ردیف 1: دریافت | پرداخت
-               ردیف 2: تراز تمام عرض
-               ردیف 3: تعداد تراکنش | اقلام فروخته شده */
             .summary-grid {
                 grid-template-columns: repeat(2, minmax(120px, 1fr));
             }
@@ -525,8 +519,22 @@
         </section>
     </div>
 
+    <!-- بارگذاری ماژول‌های پایه و محاسباتی -->
     <script src="./db.js"></script>
     <script src="./finance.js"></script>
+
+    <!-- بریج همگام‌ساز دیتابیس مارازون / بوتیا -->
+    <script>
+        (function() {
+            const activeDB = window.marazonDB || window.boutiaDB;
+            if (activeDB) {
+                window.marazonDB = activeDB;
+                window.boutiaDB = activeDB;
+            }
+        })();
+    </script>
+
+    <!-- اسکریپت اصلی گزارش و سرویس‌ورکر PWA -->
     <script type="module" src="./report.js"></script>
     <script src="./pwa.js"></script>
 </body>

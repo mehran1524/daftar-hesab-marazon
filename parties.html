@@ -11,7 +11,7 @@
     <style>
         html, body { width: 100%; max-width: 100%; overflow-x: hidden; margin: 0; padding: 0; background: #eef6f3; font-family: Tahoma, sans-serif; }
 
-        /* ===== هدر بوتیا ===== */
+        /* ===== هدر مارازون ===== */
         .app-header {
             background: #00695c;
             color: #ffffff;
@@ -274,6 +274,9 @@
     <script src="./db.js"></script>
     <script src="./finance.js"></script>
     <script>
+        /* ---------- دسترسی امن به دیتابیس مارازون ---------- */
+        const getDB = () => window.marazonDB || window.boutiaDB;
+
         /* ---------- ابزار ارقام فارسی/انگلیسی ---------- */
         function toPersianDigits(str) {
             return String(str).replace(/\d/g, d => "۰۱۲۳۴۵۶۷۸۹"[d]);
@@ -360,9 +363,12 @@
             window.scrollTo({ top: 0, behavior: "smooth" });
         }
 
-        /* ---------- ذخیره ---------- */
+        /* ---------- ذخیره شخص ---------- */
         async function savePartyHandler() {
             try {
+                const db = getDB();
+                if (!db) throw new Error("دیتابیس در دسترس نیست.");
+
                 const full_name = document.getElementById("partyName").value.trim();
                 const role = document.getElementById("partyRole").value;
                 const phone = toEnglishDigits(document.getElementById("partyPhone").value).replace(/\D/g, "").slice(0, 11);
@@ -387,7 +393,7 @@
 
                 console.log("📦 دادهٔ ارسالی به saveParty:", partyData);
 
-                const saved = await boutiaDB.saveParty(partyData);
+                const saved = await db.saveParty(partyData);
                 console.log("✅ نتیجهٔ ذخیره:", saved);
 
                 if (!saved) {
@@ -409,6 +415,10 @@
             try {
                 const searchValue = toEnglishDigits(document.getElementById("searchInput").value.trim().toLowerCase());
                 listEl.innerHTML = "";
+
+                if (!window.financeCalc || typeof window.financeCalc.getPartiesWithBalances !== "function") {
+                    throw new Error("ماژول محاسبات مالی در دسترس نیست.");
+                }
 
                 const parties = await financeCalc.getPartiesWithBalances();
 
@@ -495,7 +505,11 @@
             try {
                 const party = JSON.parse(btn.closest(".party-item").dataset.partyJson);
                 if (!confirm(`آیا از حذف «${party.full_name || party.name}» مطمئن هستید؟`)) return;
-                await boutiaDB.deleteParty(party.id);
+                
+                const db = getDB();
+                if (!db) throw new Error("دیتابیس در دسترس نیست.");
+                
+                await db.deleteParty(party.id);
                 await loadParties();
             } catch (err) {
                 console.error("❌ خطا در حذف شخص:", err);
@@ -511,7 +525,7 @@
                     return true;
                 }
             } catch (e) {
-                /* fallback به روش قدیمی */
+                /* fallback به روش سنتی */
             }
             try {
                 const ta = document.createElement("textarea");
@@ -563,10 +577,12 @@
             e.target.value = toPersianDigits(englishValue);
         });
 
-        /* ---------- راه‌اندازی ---------- */
+        /* ---------- راه‌اندازی اولیه دیتابیس مارازون ---------- */
         window.addEventListener("load", async () => {
             try {
-                await boutiaDB.init();
+                const db = getDB();
+                if (!db) throw new Error("ماژول دیتابیس بارگذاری نشده است.");
+                await db.init();
                 await loadParties();
             } catch (err) {
                 console.error("❌ خطا در راه‌اندازی صفحه:", err);
@@ -574,6 +590,6 @@
             }
         });
     </script>
-<script src="./pwa.js"></script>
+    <script src="./pwa.js"></script>
 </body>
 </html>

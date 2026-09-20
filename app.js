@@ -1,5 +1,5 @@
 /* =========================================================
-   app.js - دفتر حساب مجموعه بوتیا (نسخه شخصی)
+   app.js - دفتر حساب مجموعه مارازون (نسخه شخصی)
    ========================================================= */
 
 import {
@@ -8,6 +8,8 @@ import {
     toEnglishDigits,
     parseInputNumber
 } from "./utils.js";
+
+const DB = () => window.marazonDB || window.boutiaDB;
 
 const PRODUCT_OPTIONS = {
     buy: ["پارچه", "لوازم طراحی و دوخت", "متفرقه"],
@@ -99,10 +101,11 @@ function populateDatalist(listId, items) {
 async function updateProductsDatalist(type) {
     const staticItems = PRODUCT_OPTIONS[type] || PRODUCT_OPTIONS.buy;
     let savedItems = [];
+    const db = DB();
 
-    if (window.boutiaDB && window.boutiaDB.getProductSuggestions) {
+    if (db && db.getProductSuggestions) {
         try {
-            savedItems = await window.boutiaDB.getProductSuggestions(type);
+            savedItems = await db.getProductSuggestions(type);
         } catch (error) {
             console.error("خطا در خواندن اقلام پیشنهادی:", error);
         }
@@ -119,7 +122,8 @@ async function updateProductsDatalist(type) {
 
 async function updatePartyDatalist(type) {
     const partyList = document.getElementById("partyList");
-    if (!partyList || !window.boutiaDB) return;
+    const db = DB();
+    if (!partyList || !db) return;
 
     if (type === "expense") {
         partyList.innerHTML = "";
@@ -133,7 +137,7 @@ async function updatePartyDatalist(type) {
     }
 
     try {
-        const parties = await window.boutiaDB.getPartiesByRole(role);
+        const parties = await db.getPartiesByRole(role);
 
         const names = [...new Set(
             parties
@@ -237,13 +241,14 @@ function resetItemRowsToInitial() {
 // نمایش آخرین تراکنش‌ها
 async function loadTransactions() {
     const listContainer = document.getElementById("transactionsList");
+    const db = DB();
 
-    if (!listContainer || !window.boutiaDB) {
+    if (!listContainer || !db) {
         return;
     }
 
     try {
-        const transactions = await window.boutiaDB.getAll("transactions");
+        const transactions = await db.getAll("transactions");
 
         transactions.sort((a, b) => {
             return Number(b.timestamp || 0) - Number(a.timestamp || 0);
@@ -348,10 +353,11 @@ window.deleteTransaction = async function(txId) {
     if (!confirmed) return;
 
     try {
-        if (typeof window.boutiaDB.delete === "function") {
-            await window.boutiaDB.delete("transactions", txId);
-        } else if (typeof window.boutiaDB.remove === "function") {
-            await window.boutiaDB.remove("transactions", txId);
+        const db = DB();
+        if (typeof db.delete === "function") {
+            await db.delete("transactions", txId);
+        } else if (typeof db.remove === "function") {
+            await db.remove("transactions", txId);
         } else {
             throw new Error("متد حذف در دیتابیس تعریف نشده است.");
         }
@@ -578,12 +584,13 @@ function updateGrandTotal() {
 async function savePartyByTransactionType(type, partyName) {
     const role = PARTY_ROLE_MAP[type];
     const normalizedName = normalizeText(partyName);
+    const db = DB();
 
-    if (!role || !normalizedName || !window.boutiaDB?.findOrCreateParty) {
+    if (!role || !normalizedName || !db?.findOrCreateParty) {
         return null;
     }
 
-    return await window.boutiaDB.findOrCreateParty({
+    return await db.findOrCreateParty({
         full_name: normalizedName,
         role: role
     });
@@ -591,12 +598,13 @@ async function savePartyByTransactionType(type, partyName) {
 
 async function saveProductSuggestions(items, type) {
     if (!Array.isArray(items) || items.length === 0) return;
-    if (!window.boutiaDB?.addProductSuggestion) return;
+    const db = DB();
+    if (!db?.addProductSuggestion) return;
 
     for (const item of items) {
         if (item.category) {
             try {
-                await window.boutiaDB.addProductSuggestion(item.category, type);
+                await db.addProductSuggestion(item.category, type);
             } catch (error) {
                 console.error("خطا در ذخیره قلم پیشنهادی:", error);
             }
@@ -659,10 +667,11 @@ async function handleFormSubmit(e) {
     };
 
     try {
+        const db = DB();
         const party = await savePartyByTransactionType(type, partyName);
         transactionData.party_id = party?.id || null;
 
-        await window.boutiaDB.save("transactions", transactionData);
+        await db.save("transactions", transactionData);
 
         if (type === "buy" || type === "sell") {
             await saveProductSuggestions(items, type);
@@ -724,8 +733,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         retry.disabled = true;
 
         try {
-            await window.boutiaDB.init();
-            await window.boutiaDB.backfillTransactionPartyIds();
+            const db = DB();
+            if (!db) {
+                throw new Error("ماژول دیتابیس بارگذاری نشده است.");
+            }
+            await db.init();
+            await db.backfillTransactionPartyIds();
             await window.onTransactionTypeChange();
             await loadTransactions();
             status.hidden = true;

@@ -14,9 +14,8 @@
         .datetime-container { display: flex; flex-direction: row-reverse; justify-content: center; align-items: center; gap: 10px; margin-top: 8px; margin-bottom: 50px; padding: 4px 12px; border-radius: 20px; background: rgba(0, 0, 0, 0.15); font-family: Tahoma, sans-serif; font-size: 1rem; }
         .header-tabs { display: flex; position: absolute; right: 0; bottom: 0; height: 40px; gap: 1px; }
         .tab-item { flex: 1; min-width: 80px; display: flex; align-items: center; justify-content: center; padding: 0 6px; border: none; color: #ffffff; font-size: 0.8rem; font-weight: bold; text-decoration: none; cursor: pointer; }
-        .tab-parties { background: #87ceeb; color: #123b50; } .tab-reports { background: #008577; font-size: 0.75rem; }
-
-
+        .tab-parties { background: #87ceeb; color: #123b50; } 
+        .tab-reports { background: #008577; font-size: 0.75rem; }
 
         #itemsContainer { display: flex; flex-direction: column; gap: 0px !important; }
         #itemsContainer .item-row { position: relative; margin-bottom: 2px !important; padding: 0 !important; }
@@ -26,7 +25,7 @@
         
         /* حالت خرید (دو ستونه) */
         #itemsContainer .form-row.two-columns .form-group:nth-child(1) { flex: 2; } 
-        #itemsContainer .form-row.two-columns .form-group:nth-child(2) { display: none; } /* مخفی سازی تعداد */
+        #itemsContainer .form-row.two-columns .form-group:nth-child(2) { display: none; } /* مخفی‌سازی تعداد */
         #itemsContainer .form-row.two-columns .form-group:nth-child(3) { flex: 2; }
         #itemsContainer .form-row.two-columns .col-total-wrapper { display: none; }
 
@@ -87,25 +86,16 @@
         .transaction-description { font-size: 0.7rem; color: #7f8c8d; margin-top: 6px; font-style: italic; }
         .transaction-paid { font-size: 0.75rem; color: #00695c; font-weight: bold; margin-top: 6px; border-top: 1px dashed rgba(0,105,92,0.2); padding-top: 4px; }
 
-        .transaction-meta-icon { font-size: 0.85rem; line-height: 1; }
-
         @media (max-width: 480px) {
-            html {
-        font-size: 18px; /* قبلاً معمولاً 16px بوده */
-    }
-
-      label, input, select, textarea {
-        font-size: 2rem !important; /* حدود 2 سایز بزرگ‌تر */
-    }
-            #transactionForm > .form-row { display: flex !important; flex-direction: row !important; flex-wrap: nowrap !important; gap: 10px !important; }
+            #transactionForm > .form-row { display: flex !important; flex-direction: row !important; flex-wrap: nowrap !important; gap: 8px !important; }
             #transactionForm > .form-row > .form-group { flex: 1 1 0 !important; min-width: 0 !important; }
             #itemsContainer .form-row { flex-direction: row !important; }
-            #itemsContainer input, #itemsContainer select { font-size: 0.8rem; padding: 8px 4px; }
-            #itemsContainer .form-group label { font-size: 0.65rem; }
-            .payment-row { display: flex !important; flex-direction: row !important; flex-wrap: nowrap !important; gap: 10px !important; }
-            .tab-item { font-size: 0.65rem !important; min-width: 65px !important; padding: 0 4px !important; }
-            label { font-size: 0.7rem !important; }
-            input, select { font-size: 0.85rem !important; }
+            #itemsContainer input, #itemsContainer select { font-size: 0.85rem; padding: 8px 4px; }
+            #itemsContainer .form-group label { font-size: 0.7rem; }
+            .payment-row { display: flex !important; flex-direction: row !important; flex-wrap: nowrap !important; gap: 8px !important; }
+            .tab-item { font-size: 0.7rem !important; min-width: 65px !important; padding: 0 4px !important; }
+            label { font-size: 0.75rem !important; }
+            input, select, textarea { font-size: 0.9rem !important; }
         }
     </style>
 </head>
@@ -203,7 +193,7 @@
                         <label for="description">شرح تراکنش</label>
                         <input type="text" id="description" placeholder="مثلاً خرید پارچه برای سفارش جدید" />
                     </div>
-                    <button type="submit" class="btn-submit">ثبت در دفتر حساب بوتیا</button>
+                    <button type="submit" class="btn-submit">ثبت در دفتر حساب مارازون</button>
                 </form>
             </section>
 
@@ -219,17 +209,13 @@
         </main>
     </div>
 
+    <!-- لیست‌های هوشمند پیشنهادی -->
     <datalist id="productsList">
         <option value="پارچه"></option>
-        <option value="وسایل طراحی و دوخت"></option>
+        <option value="لوازم طراحی و دوخت"></option>
         <option value="متفرقه"></option>
     </datalist>
 
-    <script src="./clock.js"></script>
-    <script src="./db.js"></script>
-    <script src="./finance.js"></script>
-    <script type="module" src="./app.js"></script>
-    
     <datalist id="expensesList">
         <option value="اجاره کارگاه"></option>
         <option value="قبض آب"></option>
@@ -238,6 +224,12 @@
         <option value="هزینه حمل و نقل"></option>
         <option value="متفرقه"></option>
     </datalist>
-<script src="./pwa.js"></script>
+
+    <!-- لود ماژول‌ها -->
+    <script src="./clock.js"></script>
+    <script src="./db.js"></script>
+    <script src="./finance.js"></script>
+    <script type="module" src="./app.js"></script>
+    <script src="./pwa.js"></script>
 </body>
 </html>

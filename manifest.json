@@ -1,6 +1,6 @@
 {
   "name": "دفتر حساب مارازون",
-  "short_name": "بوتیا",
+  "short_name": "مارازون",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#eef6f3",
