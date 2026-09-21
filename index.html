@@ -95,8 +95,119 @@
             .payment-row { display: flex !important; flex-direction: row !important; flex-wrap: nowrap !important; gap: 8px !important; }
             .tab-item { font-size: 0.7rem !important; min-width: 65px !important; padding: 0 4px !important; }
             label { font-size: 0.75rem !important; }
-            input, select, textarea { font-size: 0.9rem !important; }
+            input, select, textarea { font-size: 0.9rem !important; }       
         }
+        /* =========================================
+   تنظیم
+   ========================================= */
+@media (max-width: 480px) {
+
+    /* =====================================
+       فرم ثبت تراکنش
+       بزرگ‌تر شدن فونت به اندازه ۴ پیکسل
+       ===================================== */
+
+    /* لیبل‌های فرم */
+    #transactionForm label {
+        font-size: calc(0.75rem + 4px) !important;
+    }
+
+    /* ورودی‌ها، سلکت‌ها و تکست‌اریا */
+    #transactionForm input,
+    #transactionForm select,
+    #transactionForm textarea {
+        font-size: calc(0.9rem + 4px) !important;
+    }
+
+    /* ورودی‌های بخش اقلام فاکتور */
+    #itemsContainer input,
+    #itemsContainer select {
+        font-size: calc(0.85rem + 4px) !important;
+    }
+
+    /* لیبل‌های بخش اقلام فاکتور */
+    #itemsContainer .form-group label {
+        font-size: calc(0.7rem + 4px) !important;
+    }
+
+    /* متن مبلغ به حروف و متن‌های کمکی */
+    #transactionForm .row-amount-words,
+    #transactionForm .row-total-words {
+        font-size: calc(0.65rem + 4px) !important;
+    }
+
+    /* جمع کل فاکتور */
+    #transactionForm .total-summary-row .total-amount-box {
+        font-size: calc(0.95rem + 4px) !important;
+    }
+
+    #transactionForm .total-summary-row .total-words {
+        font-size: calc(0.8rem + 4px) !important;
+    }
+
+    /* دکمه ثبت بدون تغییر اندازه فونت */
+    #transactionForm .btn-submit {
+        font-size: inherit !important;
+    }
+
+
+    /* =====================================
+       لیست تراکنش‌ها
+       بزرگ‌تر شدن ۲ پیکسل نسبت به کد قبلی
+       ===================================== */
+
+    /* عنوان لیست تراکنش‌ها */
+    .transactions-section h2 {
+        font-size: 1.5rem !important;
+    }
+
+    /* نام طرف حساب */
+    .transaction-party {
+        font-size: 0.95rem !important;
+    }
+
+    /* نوع تراکنش */
+    .transaction-type {
+        font-size: 0.65rem !important;
+    }
+
+    /* اطلاعات تکمیلی تراکنش */
+    .transaction-meta {
+        font-size: 0.7rem !important;
+    }
+
+    /* اقلام تراکنش */
+    .transaction-items {
+        font-size: 0.75rem !important;
+    }
+
+    /* برچسب مبلغ */
+    .transaction-amount-label {
+        font-size: 0.7rem !important;
+    }
+
+    /* مبلغ تراکنش */
+    .transaction-amount {
+        font-size: 1rem !important;
+    }
+
+    /* واحد پول */
+    .transaction-currency {
+        font-size: 0.65rem !important;
+    }
+
+    /* شرح تراکنش */
+    .transaction-description {
+        font-size: 0.7rem !important;
+    }
+
+    /* مبلغ پرداختی */
+    .transaction-paid {
+        font-size: 0.75rem !important;
+    }
+}
+
+
     </style>
 </head>
 <body>
